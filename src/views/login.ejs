@@ -1,0 +1,10 @@
+<!doctype html><html><body>
+<h1>Patient Login</h1>
+<% if (error) { %><p style="color:red"><%= error %></p><% } %>
+<form method="post" action="/login">
+  <input name="email" type="email" placeholder="Email" required>
+  <input name="password" type="password" placeholder="Password" required>
+  <input name="mfaCode" placeholder="MFA code" required>
+  <button>Log in</button>
+</form>
+</body></html>
