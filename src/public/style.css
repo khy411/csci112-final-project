@@ -159,3 +159,7 @@ td {
 .unread {
   border-left: 4px solid var(--ac);
 }
+
+.err {
+  border-left: 4px solid var(--bad);
+}

@@ -7,21 +7,37 @@ const patients = require('../queries/patients');
 const router = express.Router();
 router.use(requireAuth);
 
-router.get('/notifications', async (req, res) => {
-  // pending: list = getNotifications(...), unread = countUnread(...)
-  res.render('notifications', { list: [], unread: 0 });
-});
+const wrap = (fn) => (req, res, next) => fn(req, res, next).catch(next);
 
-router.post('/notifications/:id/read', async (req, res) => {
-  // pending: notifications.markAsRead(req.session.patientId, req.params.id); redirect back
+// AP-14 list + unread count
+router.get('/notifications', wrap(async (req, res) => {
+  const patientId = req.session.patientId;
+  const [list, unread] = await Promise.all([
+    notifications.getNotifications(patientId),
+    notifications.countUnread(patientId),
+  ]);
+  res.render('notifications', { list, unread });
+}));
+
+// AP-15 mark as read
+router.post('/notifications/:id/read', wrap(async (req, res) => {
+  await notifications.markAsRead(req.session.patientId, req.params.id);
   res.redirect('/notifications');
-});
+}));
 
-router.get('/settings', (req, res) => res.render('settings'));
+// AP-16 notification preference
+router.get('/settings', wrap(async (req, res) => {
+  const patient = await patients.findPatientById(req.session.patientId);
+  res.render('settings', { method: patient.notification_method });
+}));
 
-router.post('/settings/notification-method', async (req, res) => {
-  // pending: patients.updateNotificationMethod(req.session.patientId, req.body.method)
+router.post('/settings/notification-method', wrap(async (req, res) => {
+  try {
+    await patients.updateNotificationMethod(req.session.patientId, req.body.method);
+  } catch (err) {
+    return res.status(400).send(err.message);
+  }
   res.redirect('/settings');
-});
+}));
 
 module.exports = router;

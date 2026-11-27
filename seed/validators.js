@@ -9,7 +9,7 @@ const patients = {
       password_hash: { bsonType: 'string' },
       date_of_birth: { bsonType: 'date' },
       notification_method: { enum: ['email', 'sms'] },
-      // pending: sex, height, weight, phone_number, mfa_secret
+      // TODO: sex, height, weight, phone_number, mfa_secret
     },
   },
 };
@@ -27,7 +27,7 @@ const reports = {
       tests_performed: {
         bsonType: 'array',
         minItems: 1,
-        // pending: items schema: test_id, test_type, performed_by{}, date_performed, test_result, is_abnormal
+        // TODO: items schema: test_id, test_type, performed_by{}, date_performed, test_result, is_abnormal
       },
     },
   },
