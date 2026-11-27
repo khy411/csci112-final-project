@@ -110,6 +110,7 @@ async function getHistory(patientId) {
           report_id: 1,
           date_published: 1,
           report_accessed: 1,
+          report_accessed_at: 1,
           'tests_performed.test_type': 1,
           'tests_performed.date_performed': 1,
           'tests_performed.is_abnormal': 1,
@@ -156,7 +157,7 @@ async function getTestTrend(patientId, testType) {
 async function markReportAccessed(patientId, reportId) {
   return reports().updateOne(
     { report_id: reportId, patient_id: patientId, status: 'approved' },
-    { $set: { report_accessed: true } }
+    { $set: { report_accessed: true, report_accessed_at: new Date() } }
   );
 }
 

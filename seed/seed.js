@@ -132,6 +132,7 @@ async function run() {
       status: 'approved',
       date_published: d(r.published),
       report_accessed: r.accessed,
+      report_accessed_at: r.accessed ? new Date() : null,
     });
   }
   // pending report used for the live "lab approves" step in the demo
@@ -141,6 +142,7 @@ async function run() {
     tests_performed: [buildTest('CBC', false, d('2026-11-20'), EMPLOYEES[0]), buildTest('Urinalysis', false, d('2026-11-20'), EMPLOYEES[0])],
     status: 'pending',
     report_accessed: false,
+    report_accessed_at: null,
   });
 
   // 5. hand-written notifications: Sent+read, Sent+unread+urgent, Failed (retry demo), Sent+unread
@@ -186,6 +188,7 @@ async function run() {
         status: 'approved',
         date_published: published,
         report_accessed: accessed,
+        report_accessed_at: accessed ? new Date() : null,
       };
       reports.push(report);
 

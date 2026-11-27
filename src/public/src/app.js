@@ -13,9 +13,10 @@ if (typeof document !== 'undefined') (function () {
   let token = 0; // ignores responses that arrive after the user has navigated elsewhere
 
   const tags = (tests) => tests.map((x) => `<span class="tag ${x.is_abnormal ? 'ab' : ''}">${esc(x.test_type)}${x.is_abnormal ? ' ⚠' : ''}</span>`).join('');
-  const reportCard = (r) => `<div class="card"><div class="row"><div><strong>${esc(r.report_id)}</strong>
-    <div class="mut">Published ${fmt(r.date_published)}</div></div>
-    <button class="btn" data-open="${esc(r.report_id)}">Open</button></div><div>${tags(r.tests_performed || [])}</div></div>`;
+    const reportCard = (r) => `<div class="card report"><div><strong>${esc(r.report_id)}</strong>
+    <div class="mut">Published ${fmt(r.date_published)}</div>
+    <div>${tags(r.tests_performed || [])}</div></div>
+    <button class="btn" data-open="${esc(r.report_id)}">Open</button></div>`;
   const empty = (msg) => `<div class="card mut">${msg}</div>`;
 
   function renderNav() {
@@ -37,7 +38,7 @@ if (typeof document !== 'undefined') (function () {
       <label>From<input type="date" id="f-from" value="${state.from}"></label>
       <label>To<input type="date" id="f-to" value="${state.to}"></label>
       <label>Test type<select id="f-type"><option value="">All</option>${state.testTypes.map((x) => `<option ${state.type === x ? 'selected' : ''}>${esc(x)}</option>`).join('')}</select></label>
-      <label style="flex-direction:row;align-items:center;gap:6px"><input type="checkbox" id="f-ab" ${state.abnormal ? 'checked' : ''}>Abnormal only</label></div>`;
+      <label class="check"><input type="checkbox" id="f-ab" ${state.abnormal ? 'checked' : ''}>Abnormal only</label></div>`;
   }
 
   async function viewResults() {
@@ -54,7 +55,7 @@ if (typeof document !== 'undefined') (function () {
     const h = await API.getDiagnosticHistory();
     if (!h.length) return empty('No diagnostic history yet.');
     return h.map((v) => `<div class="card"><div class="row"><strong>Visit · ${fmt(v.date_published)}</strong>
-      <span class="mut">${v.report_accessed ? 'Viewed' : 'Not yet viewed'}</span></div>
+      <span class="mut">${v.report_accessed_at ? 'Viewed ' + fmt(v.report_accessed_at) : 'Not yet viewed'}</span></div>
       ${(v.tests_performed || []).map((x) => `<div class="mut">${esc(x.test_type)} · performed ${fmt(x.date_performed)} ${x.is_abnormal ? '⚠ abnormal' : ''}</div>`).join('')}
       <button class="btn" data-open="${esc(v.report_id)}" style="margin-top:6px">Open report</button></div>`).join('');
   }
@@ -64,7 +65,7 @@ if (typeof document !== 'undefined') (function () {
     state.unread = unread_count; renderNav();
     if (!items.length) return empty('No notifications.');
     return `<div class="mut" style="margin-bottom:8px">${unread_count} unread</div>` +
-      items.map((x) => `<div class="card ${x.status !== 'viewed' ? 'unread' : ''}"><div class="row"><div>${esc(x.message)}<div class="mut">${fmt(x.timestamp)}</div></div>
+      items.map((x) => `<div class="card ${x.status !== 'viewed' ? 'unread' : ''}"><div class="row"><div><strong>Report ${esc(x.report_id)}</strong><div>${esc(x.message)}</div><div class="mut">${fmt(x.timestamp)}</div></div>
       ${x.status !== 'viewed' ? `<button class="btn" data-read="${esc(x.notification_id)}">Mark as read</button>` : '<span class="mut">Read</span>'}</div></div>`).join('');
   }
 

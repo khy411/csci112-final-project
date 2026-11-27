@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap');
 *,
 *::before,
 *::after {
@@ -5,12 +6,15 @@
 }
 
 :root {
-  --bg: #f7f8fa;
+  --bg: #f6f0e7;
   --card: #fff;
   --tx: #1b2430;
-  --mut: #667085;
-  --bd: #e3e7ed;
-  --ac: #2563eb;
+  --mut: #3d4756;
+  --bd: #cbbba5;
+  --ac: #15803d;
+  --ac-dark: #166534;
+  --hov: #dcf1e3;
+  --hov-btn: #86cf9f;
   --bad: #c2410c;
   --badbg: #ffedd5;
 }
@@ -25,16 +29,25 @@ body {
   background: var(--bg);
   color: var(--tx);
   font: 15px/1.5 sans-serif;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 main {
+  width: 100%;
   max-width: 760px;
   margin: 0 auto;
-  padding: 16px;
+  padding: 24px 16px 40px;
+  text-align: center;
 }
 
 h1 {
-  font-size: 20px;
+  font-family: 'Merriweather', Georgia, serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #14532d;
   margin: 0 0 12px;
 }
 
@@ -43,14 +56,30 @@ h2 {
   margin: 16px 0 8px;
 }
 
+/* separator 1: line under the title + log out */
+main > .row {
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--bd);
+}
+
+main > .row h1 {
+  margin: 0;
+}
+
+/* separator 2: line under the tabs */
 nav {
   display: flex;
   gap: 6px;
   flex-wrap: wrap;
+  justify-content: center;
+  padding-bottom: 14px;
   margin-bottom: 14px;
+  border-bottom: 1px solid var(--bd);
 }
 
-nav button,
+/* ---------- buttons and form controls ---------- */
+button,
 .btn,
 input,
 select {
@@ -61,8 +90,7 @@ select {
   border-radius: 8px;
 }
 
-nav button,
-.btn {
+button {
   padding: 7px 12px;
   cursor: pointer;
 }
@@ -73,6 +101,45 @@ select {
   border-radius: 6px;
 }
 
+input[type="date"],
+select {
+  height: 40px;
+  min-width: 150px;
+  padding: 0 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  accent-color: var(--ac);
+  color-scheme: light;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
+input[type="date"]:hover,
+select:hover {
+  border-color: var(--ac);
+}
+
+input:focus,
+select:focus,
+button:focus-visible {
+  outline: 2px solid var(--ac);
+  outline-offset: 2px;
+  border-color: var(--ac);
+}
+
+nav button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 nav button.on {
   background: var(--ac);
   color: #fff;
@@ -80,20 +147,42 @@ nav button.on {
 }
 
 .badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  margin-left: 6px;
+  border-radius: 999px;
   background: var(--bad);
   color: #fff;
-  border-radius: 99px;
-  padding: 0 7px;
   font-size: 12px;
-  margin-left: 4px;
+  font-weight: 700;
+  line-height: 1;
+  vertical-align: middle;
 }
 
+/* ---------- cards ---------- */
 .card {
   background: var(--card);
   border: 1px solid var(--bd);
   border-radius: 10px;
   padding: 12px;
   margin-bottom: 8px;
+  text-align: left;
+}
+
+/* report cards: id, date, tests on the left; Open button on the right, vertically centered */
+.card.report {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.card.report .btn {
+  padding: 8px 22px;
 }
 
 .row,
@@ -108,22 +197,60 @@ nav button.on {
   align-items: center;
 }
 
+/* ---------- results filters ---------- */
 .filters {
-  gap: 10px;
-  align-items: end;
-  margin-bottom: 12px;
+  gap: 12px;
+  align-items: flex-end;
+  justify-content: flex-start;
+  margin-bottom: 8px;
+  padding: 12px;
+  text-align: left;
+  background: var(--card);
+  border: 1px solid var(--bd);
+  border-radius: 10px;
+  box-shadow: 0 1px 2px rgba(60, 40, 20, 0.1);
 }
 
 .filters label {
   display: flex;
   flex-direction: column;
-  font-size: 12px;
+  align-items: flex-start;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 600;
   color: var(--mut);
+}
+
+.filters input,
+.filters select {
+  font-weight: 400;
+}
+
+/* "Abnormal only": the last item in the row, pushed to the right edge */
+.filters label:last-child {
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  height: 40px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--tx);
+  cursor: pointer;
+}
+
+.filters label:last-child input {
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  accent-color: var(--ac);
+  cursor: pointer;
+  box-shadow: none;
 }
 
 .mut {
   color: var(--mut);
-  font-size: 13px;
+  font-size: 14px;
 }
 
 .tag {
@@ -162,4 +289,96 @@ td {
 
 .err {
   border-left: 4px solid var(--bad);
+}
+
+/* soft shadow so white cards and controls stand out from the beige */
+.card,
+button,
+input[type="date"],
+select {
+  box-shadow: 0 1px 2px rgba(60, 40, 20, 0.1);
+}
+
+/* ---------- hover ---------- */
+button,
+.card {
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.card:hover {
+  background: var(--hov);
+  border-color: #9fcfae;
+}
+
+button:hover {
+  background: var(--hov-btn);
+  border-color: var(--ac);
+}
+
+nav button.on:hover {
+  background: var(--ac-dark);
+  border-color: var(--ac-dark);
+}
+
+/* ---------- login page ---------- */
+body.login-page {
+  align-items: center;
+}
+
+.login {
+  max-width: 400px;
+}
+
+.login h1 {
+  margin-bottom: 18px;
+}
+
+.login-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 22px;
+  text-align: left;
+  background: var(--card);
+  border: 1px solid var(--bd);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(60, 40, 20, 0.1);
+}
+
+.login-card label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.login-card input {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 15px;
+  border-radius: 8px;
+}
+
+.login-card button {
+  margin-top: 4px;
+  padding: 11px;
+  font-weight: 600;
+  background: var(--ac);
+  color: #fff;
+  border-color: var(--ac);
+}
+
+.login-card button:hover {
+  background: var(--ac-dark);
+  border-color: var(--ac-dark);
+}
+
+.login-error {
+  margin: 0 0 14px;
+  padding: 8px 12px;
+  color: var(--bad);
+  background: var(--badbg);
+  border: 1px solid var(--bad);
+  border-radius: 8px;
 }

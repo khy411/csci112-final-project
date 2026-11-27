@@ -33,6 +33,7 @@ function toReportDTO(r, { withResults = true } = {}) {
     report_id: r.report_id,
     date_published: r.date_published,
     report_accessed: Boolean(r.report_accessed),
+    report_accessed_at: r.report_accessed_at || null,
     tests_performed: (r.tests_performed || []).map((t) => ({
       test_id: t.test_id,
       test_type: t.test_type,
